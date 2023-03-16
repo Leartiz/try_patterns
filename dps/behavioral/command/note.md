@@ -36,7 +36,7 @@
 
 ## **UML-диаграмма** ##
 
-:::mermaid
+```mermaid
 classDiagram
     note for Client "Клиент может знать\nо всех сущностях."
     class Client {
@@ -74,7 +74,7 @@ classDiagram
     CommandFactory --> ConcreteCommand
     Command <|-- ConcreteCommand
     ConcreteCommand o-- Receiver
-:::
+```
 
 - Команда регистрируется, чтобы быть вызванной позднее.
 - Можно динамически заменять - одну команду на другую.
