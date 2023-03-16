@@ -19,29 +19,6 @@ using namespace std;
 
 */
 
-class Game final
-{
-public:
-    void create()
-    {
-        cout << "Create game " << endl;
-    }
-    void open(string file)
-    {
-        cout << "Open game from " << file << endl;
-    }
-    void save(string file)
-    {
-        cout << "Save game in " << file << endl;
-    }
-    void make_move(string move)
-    {
-        cout << "Make move " << move << endl;
-    }
-};
-
-// -----------------------------------------------------------------------
-
 string generateFileName(size_t len = 10)
 {
     static const std::string chars("0123456789"
@@ -91,6 +68,28 @@ string getPlayerChessStep(string prompt)
     return input;
 }
 
+// -----------------------------------------------------------------------
+
+class Game final
+{
+public:
+    void create()
+    {
+        cout << "Create game " << endl;
+    }
+    void open(string file)
+    {
+        cout << "Open game from " << file << endl;
+    }
+    void save(string file)
+    {
+        cout << "Save game in " << file << endl;
+    }
+    void make_move(string move)
+    {
+        cout << "Make move " << move << endl;
+    }
+};
 
 // -----------------------------------------------------------------------
 
