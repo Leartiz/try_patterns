@@ -1,6 +1,4 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-   behavioral \
-   generative
-
+    command
