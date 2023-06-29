@@ -54,14 +54,14 @@ string generateChessStep()
     return result;
 }
 
-string getPlayerFileName(string prompt)
+string getPlayerFileName(const string& prompt)
 {
     string input{ generateFileName() };
     cout << prompt << " " << input << endl;
     return input;
 }
 
-string getPlayerChessStep(string prompt)
+string getPlayerChessStep(const string& prompt)
 {
     string input{ generateChessStep() };
     cout << prompt << " " << input << endl;
