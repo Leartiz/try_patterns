@@ -5,32 +5,39 @@
 ```mermaid
 classDiagram
     class A {
-        +do_all() void
+        +do_all()* void
         -do_before() void
         -do_after() void
-        #do_common() void*
     }
-    note for A "void do_all() {
+
+    class B {
+        +do_all()* void
+    }
+    note for B "void do_all() {
         ____ do_before();
+        ____ do_before();
+        ____ do_before();
+        ____ // ...
         ____
-        ____ do_common();
+        ____ // DO concrete impl
         ____
         ____ do_after();
     }"
 
-    class B {
-        #do_common() void*
-    }
-    note for B "Usage example:
-        A* b = new B();
-        b->do_all();
-        delete b;
-    "
-
     class C {
-        #do_common() void*
+        +do_all()* void
     }
+    note for C "void do_all() {
+        ____ do_before();
+        ____
+        ____ // DO concrete impl
+        ____
+        ____ do_after();
+        ____ do_after();
+        ____ do_after();
+        ____ // ...
+    }"
 
     A <|-- B
-    A <|-- C
+    C --|> A
 ```

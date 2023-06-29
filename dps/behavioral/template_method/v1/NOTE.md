@@ -8,7 +8,7 @@ classDiagram
         +do_all() void
         -do_before() void
         -do_after() void
-        #do_common() void*
+        #do_common()* void
     }
     note for A "void do_all() {
         ____ do_before();
@@ -19,7 +19,7 @@ classDiagram
     }"
 
     class B {
-        #do_common() void*
+        #do_common()* void
     }
     note for B "Usage example:
         A* b = new B();
@@ -28,7 +28,7 @@ classDiagram
     "
 
     class C {
-        #do_common() void*
+        #do_common()* void
     }
 
     A <|-- B
