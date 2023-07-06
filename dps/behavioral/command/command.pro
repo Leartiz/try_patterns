@@ -1,8 +1,4 @@
-TEMPLATE = app
-CONFIG += console c++17
+TEMPLATE = subdirs
 
-CONFIG -= app_bundle
-CONFIG -= qt
-
-SOURCES += \
-        impl.cpp
+SUBDIRS += \
+    v1
