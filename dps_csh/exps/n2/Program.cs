@@ -11,6 +11,13 @@ Console.WriteLine(b.StrMult(5));
 
 // ***
 
+NS_1.A a = new NS_1.A("A From NS_1");
+
+NS_1.SUB_1.AEx.WriteAbout(a);
+NS_1.SUB_2.AEx.WriteAbout(a);
+
+// -----------------------------------------------------------------------
+
 public static class StringExtension
 {
     // открытый метод
@@ -61,6 +68,44 @@ public static class BEx
             stringBuilder.Append(b.StrVal);
         }
         return stringBuilder.ToString();
+    }
+}
+
+// -----------------------------------------------------------------------
+
+namespace NS_1
+{
+    public class A
+    {
+        public A(string name)
+        {
+            Name = name;
+        }
+        public string Name { get; set; }
+    }
+
+    // ***
+
+    namespace SUB_1
+    {
+        public static class AEx
+        {
+            public static void WriteAbout(this A a)
+            {
+                Console.WriteLine("AEx +++ From SUB_1. Has Name: " + a.Name);
+            }
+        }
+    }
+
+    namespace SUB_2
+    {
+        public static class AEx
+        {
+            public static void WriteAbout(this A a)
+            {
+                Console.WriteLine("AEx --- From SUB_2. Has Name: " + a.Name);
+            }
+        }
     }
 }
 
