@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.IO;
 using System.Text;
 
 // ***
@@ -50,7 +49,7 @@ public class A
 
 public abstract class LogFileReaderBase
 {
-    private Lazy<Stream> _stream;
+    private readonly Lazy<Stream> _stream;
 
     // ***
 
@@ -59,7 +58,7 @@ public abstract class LogFileReaderBase
         _stream = new Lazy<Stream>(() => OpenFileStream(fileName));
     }
 
-    // базовая реализация
+    // базовая реализация (?)
     protected virtual Stream OpenFileStream(string fileName)
     {
         return new FileStream(fileName, FileMode.Open);
@@ -70,15 +69,26 @@ public abstract class LogFileReaderBase
     public IEnumerable<string> ReadLogEntry()
     {
         StreamReader sr = new StreamReader(_stream.Value);
-        return sr.ReadToEnd().Split(new[] { "\r\n" }, StringSplitOptions.None);
+        List<string> lines = new List<string>(sr.ReadToEnd().Split(new[] { "\r\n" },
+            StringSplitOptions.None));
+
+        if (lines.Count > 0)
+        {
+            int endIndex = lines.Count - 1;
+            if (lines[endIndex].Length == 0)
+                lines.RemoveAt(endIndex);
+        }
+        return lines;
     }
 }
 
 public class FakeLogFileReader : LogFileReaderBase
 {
     private readonly MemoryStream _mockStream;
+
+    // так как ленивая инициализация потока...
     public FakeLogFileReader(MemoryStream mockStream)
-    : base(string.Empty)
+        : base(string.Empty)
     {
         _mockStream = mockStream;
     }
@@ -88,19 +98,50 @@ public class FakeLogFileReader : LogFileReaderBase
     }
 }
 
-// ***
+// -----------------------------------------------------------------------
 
+// атрибут, помечающий класс, содержащий тесты и,
+// при необходимости, методы настройки или демонтажа.
+// с NUnit 2.5 атрибут TestFixture является необязательным (?)
+[TestFixture]
 public class TestLogFileReader
 {
-    public static MemoryStream GetMemoryStreamWithOneElement()
+    public static void NextLetters(byte[] buffer)
     {
-        Random rnd = new Random();
+        var rnd = new Random();
+        string letters = new string("ABCDEabcde1234567890_");
+
+        for (int i = 0; i < buffer.Length; i++)
+        {
+            var anyIndex = rnd.Next(letters.Length);
+            buffer[i] = (byte)letters[anyIndex];
+        }
+
+        // ***
+
+        Console.WriteLine(Encoding.UTF8.GetString(buffer));
+    }
+
+    public static MemoryStream GetMemoryStreamWithSomeElement(int n)
+    {
         MemoryStream ms = new MemoryStream();
+        for (int i = 0; i < n; ++i)
+        {
+            byte[] buffer = new byte[16];
+            NextLetters(buffer);
 
-        byte[] oneByte = new byte[1];
-        rnd.NextBytes(oneByte);
+            // ***
 
-        ms.Write(oneByte, 0, oneByte.Length);
+            var list = new List<byte>(buffer)
+            {
+                (byte)'\r',
+                (byte)'\n'
+            };
+
+            ms.Write(list.ToArray(), 0, list.Count);
+        }
+
+        ms.Position = 0;
         return ms;
     }
 
@@ -111,11 +152,26 @@ public class TestLogFileReader
     {
         // Arrange
         LogFileReaderBase cut = new FakeLogFileReader(
-            GetMemoryStreamWithOneElement());
+            GetMemoryStreamWithSomeElement(1));
 
         // Act
         var logEntries = cut.ReadLogEntry();
         // Assert
         Assert.That(logEntries.Count(), Is.EqualTo(1));
     }
+
+    [Test]
+    public void TestFakedMemoryStreamProvidedTwoElement()
+    {
+        // Arrange
+        LogFileReaderBase cut = new FakeLogFileReader(
+            GetMemoryStreamWithSomeElement(2));
+
+        // Act
+        var logEntries = cut.ReadLogEntry();
+        // Assert
+        Assert.That(logEntries.Count(), Is.EqualTo(2));
+    }
+
+    // ...
 }
