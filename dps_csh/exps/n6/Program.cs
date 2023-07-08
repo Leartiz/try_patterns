@@ -5,8 +5,24 @@ using System.Diagnostics.Contracts;
 
 // ***
 
-Account acc = new Account(100.0);
+Account acc = new(-100.0);
 Console.WriteLine("Balance: " + acc.Balance);
+
+// ***
+
+Console.WriteLine(default(int));
+Console.WriteLine(default(string));
+
+Console.WriteLine(DefaultCreator<int>.Give());
+Console.WriteLine(DefaultCreator<string>.Give());
+
+// ***
+
+Console.WriteLine(default(string) == null);
+Console.WriteLine(DefaultCreator<string>.Give() == null);
+
+Console.WriteLine(default(string)! == null);
+Console.WriteLine(DefaultCreator<string>.Give() == null);
 
 // -----------------------------------------------------------------------
 
@@ -17,14 +33,16 @@ public abstract class LogImporter
     public abstract string ParseLogEntry(string stringEntry);
 }
 
-// пишется отдельно, а также ограничения повторяются при реализации
+// пишется отдельно (?), а также ограничения повторяются при реализации
 [ExcludeFromCodeCoverage, ContractClassFor(typeof(LogImporter))]
 public abstract class LogImporterContract : LogImporter
 {
     public override IEnumerable<string> ReadEntries(ref int position)
     {
         Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
+
         Contract.Ensures(
+            // внутри метода { position = ...; return position; }
             Contract.ValueAtReturn(out position) >= 
             Contract.OldValue(position));
         
@@ -41,23 +59,12 @@ public abstract class LogImporterContract : LogImporter
 
 // -----------------------------------------------------------------------
 
-public class MemLogImporter : LogImporter
+public static class DefaultCreator<T>
 {
-    public override IEnumerable<string> ReadEntries(ref int position)
+    public static T Give()
     {
-        Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-        Contract.Ensures(
-            Contract.ValueAtReturn(out position) >=
-            Contract.OldValue(position));
-
-        return new string[1];
-    }
-
-    public override string ParseLogEntry(string stringEntry)
-    {
-
-
-        throw new NotImplementedException();
+        // игнорировать NULL ссылку (?)
+        return default!;
     }
 }
 
@@ -87,12 +94,24 @@ public class Account
 
     public Account(double balance = 0)
     {
-        Balance = balance;
+        Contract.Requires(balance >= 0);
+
+        // ***
+
+        if (balance < 0)
+            throw new ApplicationException("Account, ctor, balance < 0");
+
+        this.balance = balance;
     }
 
     public void Deposit(double amount)
     {
         Contract.Requires(amount >= 0);
+
+        // ***
+
+        if (amount < 0)
+            throw new ApplicationException("Account, Deposit, amount < 0");
 
         Balance += amount;
     }
@@ -102,6 +121,13 @@ public class Account
         Contract.Requires(amount > 0);
         Contract.Requires(amount <= Balance);
 
+        // ***
+
+        if (amount <= 0)
+            throw new ApplicationException("Account, Withdraw, amount <= 0");
+        if (amount > Balance)
+            throw new ApplicationException("Account, Withdraw, amount > Balance");
+
         Balance -= amount;
     }
 
@@ -109,14 +135,16 @@ public class Account
     {
         Contract.Ensures(Balance == 0);
 
-        Account newAccount = new Account()
-        {
-            Balance = this.Balance 
-        };
+        Account newAccount = new(Balance);
         Balance = 0;
+
         return newAccount;
     }
 
+    // ***
+
+    // проверка инвариантов класса происходит
+    // в конце каждого public метода класса
     [ContractInvariantMethod]
     protected void ValidAccount()
     {
