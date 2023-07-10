@@ -1,12 +1,20 @@
-﻿#define CONTRACTS_FULL
+﻿//#define CONTRACTS_FULL
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
 // ***
 
-Account acc = new(-100.0);
-Console.WriteLine("Balance: " + acc.Balance);
+try
+{
+    Account acc = new(-100.0);
+    Console.WriteLine("Balance: " + acc.Balance);
+}
+catch (ApplicationException err) 
+{
+    Console.WriteLine("exc: " + err.Message);
+}
 
 // ***
 
@@ -77,17 +85,14 @@ public class Account
     {
         get
         {
-            var cond = () =>
-            {
-                Console.WriteLine(Contract.Result<double>());
-                return Contract.Result<double>() >= 100.0;
-            };
-            Contract.Ensures(cond()) ;
+            if (balance < 0.0)
+                throw new ApplicationException("Account, get, balance < 0");
             return balance;
         }
         set
         {
-            Contract.Requires(value >= 10000.0);
+            if (value < 0.0)
+                throw new ApplicationException("Account, get, value < 0");
             balance = value;
         }
     }
