@@ -108,7 +108,6 @@ classDiagram
 
         + Insert() error
 	    + Update() error
-	    + UpdateWithCompanyId(int) error
 	    + Delete() error
 
         - person Person
@@ -116,6 +115,8 @@ classDiagram
     }
 
     PersonRowGateway --> Type
+    
+    %% or inheritance?
     PersonRowGateway *-- Person
     PersonRowGateway o-- Storage
 ```
