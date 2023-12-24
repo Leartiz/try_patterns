@@ -6,79 +6,145 @@ import (
 )
 
 type PersonRowGateway interface {
-	//SetCompanyId(value int) bool
+	domain.Person
+
+	Insert() error
+	Update() error
+	UpdateWithCompanyId(companyId int) error
+	Delete() error
 }
 
 type personRowGateway struct {
-	person  domain.Person
+	domain.Person
 	storage Storage
 }
 
 func MakePerson(firstName, lastName string, companyId int) (PersonRowGateway, error) {
-	if !domain.IsCorrectPersonName(firstName) || !domain.IsCorrectPersonName(lastName) {
-		return &personRowGateway{}, fmt.Errorf("wrong names")
+	if !domain.IsCorrectPersonName(firstName) ||
+		!domain.IsCorrectPersonName(lastName) {
+		return nil, fmt.Errorf("wrong names")
 	}
 
 	// ***
 
-	storage := instance()
+	storage := Instance()
 	exists, err := storage.ExistsCompany(companyId)
 	if err != nil {
-		return &personRowGateway{}, err
+		return nil, err
 	}
-
 	if !exists {
-		return &personRowGateway{}, fmt.Errorf("wrong company id")
+		return nil, fmt.Errorf("wrong company id")
 	}
 
 	// ***
 
 	insertedRowId, err := storage.InsertPerson(firstName, lastName, companyId)
 	if err != nil {
-		return &personRowGateway{}, err
+		return nil, err
 	}
 	insertedPerson, err := storage.GetPersonById(insertedRowId)
 	if err != nil {
-		return &personRowGateway{}, err
+		return nil, err
 	}
 
 	return &personRowGateway{
-		person:  insertedPerson,
+		Person:  insertedPerson,
 		storage: storage,
 	}, nil
 }
 
 func FindPersonById(id int) (PersonRowGateway, error) {
-	return personRowGateway{}, nil
+	storage := Instance()
+	foundPerson, err := storage.GetPersonById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &personRowGateway{
+		Person:  foundPerson,
+		storage: storage,
+	}, nil
 }
 
 func FindPersonsForCompany(companyId int) ([]PersonRowGateway, error) {
-	return []PersonRowGateway{}, nil
+	storage := Instance()
+	persons, err := storage.GetPersonsByCompanyId(companyId)
+	if err != nil {
+		return nil, err
+	}
+
+	results := []PersonRowGateway{}
+	for _, val := range persons {
+		results = append(results, &personRowGateway{
+			Person: val, storage: storage,
+		}, nil)
+	}
+	return results, nil
 }
 
 // crud
 // -----------------------------------------------------------------------
 
-func (p *personRowGateway) Person() domain.Person {
-	return p.person
+func (p *personRowGateway) Insert() error {
+	insertedRowId, err := p.storage.InsertPerson(
+		p.GetFirstName(),
+		p.GetLastName(),
+		p.GetCompanyId(),
+	)
+	if err != nil {
+		return err
+	}
+
+	// ***
+
+	p.Person = domain.NewPersonWithoutChecks(
+		insertedRowId, p.GetCompanyId(),
+		p.GetFirstName(),
+		p.GetLastName(),
+	)
+	return nil
 }
 
-func (p *personRowGateway) Insert() {
+func (p *personRowGateway) Update() error {
+	err := p.storage.UpdatePerson(
+		p.GetId(), p.GetFirstName(), p.GetLastName(),
+		p.GetCompanyId(),
+	)
+	if err != nil {
+		return err
+	}
 
+	// ***
+
+	p.Person, err = p.storage.GetPersonById(p.GetId()) // don't have to make a request!
+	return err
 }
 
-func (p *personRowGateway) Update() {
+func (p *personRowGateway) UpdateWithCompanyId(companyId int) error {
+	exists, err := p.storage.ExistsCompany(companyId)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return fmt.Errorf("wrong company id")
+	}
 
+	// ***
+
+	err = p.storage.UpdatePerson(
+		p.GetId(), p.GetFirstName(), p.GetLastName(),
+		companyId,
+	)
+	if err != nil {
+		return err
+	}
+
+	// ***
+
+	p.Person, err = p.storage.GetPersonById(p.GetId())
+	return err
 }
 
-func (p *personRowGateway) UpdateFirstName(value string) {
-
-}
-
-func (p *personRowGateway) UpdateLastName(value string) {
-
-}
-
-func (p *personRowGateway) Delete() {
-
+func (p *personRowGateway) Delete() error {
+	return p.storage.DeletePersonById(p.GetId())
 }

@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"fmt"
 	"unicode"
 )
 
@@ -12,6 +13,9 @@ type Person interface {
 
 	SetFirstName(value string) bool
 	SetLastName(value string) bool
+
+	String() string
+	Copy() Person
 }
 
 type person struct {
@@ -58,6 +62,15 @@ func (p *person) GetLastName() string {
 
 func (p *person) GetCompanyId() int {
 	return p.companyId
+}
+
+func (p *person) String() string {
+	return fmt.Sprintf("%v", *p)
+}
+
+func (p *person) Copy() Person {
+	copyPerson := *p
+	return &copyPerson
 }
 
 // setters
