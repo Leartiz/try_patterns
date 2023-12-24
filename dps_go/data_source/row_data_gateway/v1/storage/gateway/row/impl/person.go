@@ -1,33 +1,31 @@
-package storage
+package impl
 
 import (
-	"dps_go/data_source/row_data_gateway/v1/domain"
+	domain "dps_go/data_source/row_data_gateway/v1/domain"
+	domainImpl "dps_go/data_source/row_data_gateway/v1/domain/impl"
+	storage "dps_go/data_source/row_data_gateway/v1/storage"
+	rowGateway "dps_go/data_source/row_data_gateway/v1/storage/gateway/row"
+	storageImpl "dps_go/data_source/row_data_gateway/v1/storage/impl"
 	"fmt"
 )
 
-type PersonRowGateway interface {
-	domain.Person
-
-	Insert() error
-	Update() error
-	UpdateWithCompanyId(companyId int) error
-	Delete() error
-}
-
 type personRowGateway struct {
 	domain.Person
-	storage Storage
+	storageInstance storage.Storage
 }
 
-func MakePerson(firstName, lastName string, companyId int) (PersonRowGateway, error) {
-	if !domain.IsCorrectPersonName(firstName) ||
-		!domain.IsCorrectPersonName(lastName) {
+func MakePerson(storageType storage.Type,
+	firstName, lastName string, companyId int,
+) (rowGateway.Person, error) {
+
+	if !domainImpl.IsCorrectPersonName(firstName) ||
+		!domainImpl.IsCorrectPersonName(lastName) {
 		return nil, fmt.Errorf("wrong names")
 	}
 
 	// ***
 
-	storage := Instance()
+	storage := storageImpl.Instance(storageType)
 	exists, err := storage.ExistsCompany(companyId)
 	if err != nil {
 		return nil, err
@@ -48,35 +46,35 @@ func MakePerson(firstName, lastName string, companyId int) (PersonRowGateway, er
 	}
 
 	return &personRowGateway{
-		Person:  insertedPerson,
-		storage: storage,
+		Person:          insertedPerson,
+		storageInstance: storage,
 	}, nil
 }
 
-func FindPersonById(id int) (PersonRowGateway, error) {
-	storage := Instance()
+func FindPersonById(storageType storage.Type, id int) (rowGateway.Person, error) {
+	storage := storageImpl.Instance(storageType)
 	foundPerson, err := storage.GetPersonById(id)
 	if err != nil {
 		return nil, err
 	}
 
 	return &personRowGateway{
-		Person:  foundPerson,
-		storage: storage,
+		Person:          foundPerson,
+		storageInstance: storage,
 	}, nil
 }
 
-func FindPersonsForCompany(companyId int) ([]PersonRowGateway, error) {
-	storage := Instance()
+func FindPersonsForCompany(storageType storage.Type, companyId int) ([]rowGateway.Person, error) {
+	storage := storageImpl.Instance(storageType)
 	persons, err := storage.GetPersonsByCompanyId(companyId)
 	if err != nil {
 		return nil, err
 	}
 
-	results := []PersonRowGateway{}
+	results := []rowGateway.Person{}
 	for _, val := range persons {
 		results = append(results, &personRowGateway{
-			Person: val, storage: storage,
+			Person: val, storageInstance: storage,
 		}, nil)
 	}
 	return results, nil
@@ -86,7 +84,7 @@ func FindPersonsForCompany(companyId int) ([]PersonRowGateway, error) {
 // -----------------------------------------------------------------------
 
 func (p *personRowGateway) Insert() error {
-	insertedRowId, err := p.storage.InsertPerson(
+	insertedRowId, err := p.storageInstance.InsertPerson(
 		p.GetFirstName(),
 		p.GetLastName(),
 		p.GetCompanyId(),
@@ -97,7 +95,7 @@ func (p *personRowGateway) Insert() error {
 
 	// ***
 
-	p.Person = domain.NewPersonWithoutChecks(
+	p.Person = domainImpl.NewPersonWithoutChecks(
 		insertedRowId, p.GetCompanyId(),
 		p.GetFirstName(),
 		p.GetLastName(),
@@ -106,7 +104,7 @@ func (p *personRowGateway) Insert() error {
 }
 
 func (p *personRowGateway) Update() error {
-	err := p.storage.UpdatePerson(
+	err := p.storageInstance.UpdatePerson(
 		p.GetId(), p.GetFirstName(), p.GetLastName(),
 		p.GetCompanyId(),
 	)
@@ -116,12 +114,12 @@ func (p *personRowGateway) Update() error {
 
 	// ***
 
-	p.Person, err = p.storage.GetPersonById(p.GetId()) // don't have to make a request!
+	p.Person, err = p.storageInstance.GetPersonById(p.GetId()) // don't have to make a request!
 	return err
 }
 
 func (p *personRowGateway) UpdateWithCompanyId(companyId int) error {
-	exists, err := p.storage.ExistsCompany(companyId)
+	exists, err := p.storageInstance.ExistsCompany(companyId)
 	if err != nil {
 		return err
 	}
@@ -131,7 +129,7 @@ func (p *personRowGateway) UpdateWithCompanyId(companyId int) error {
 
 	// ***
 
-	err = p.storage.UpdatePerson(
+	err = p.storageInstance.UpdatePerson(
 		p.GetId(), p.GetFirstName(), p.GetLastName(),
 		companyId,
 	)
@@ -141,10 +139,10 @@ func (p *personRowGateway) UpdateWithCompanyId(companyId int) error {
 
 	// ***
 
-	p.Person, err = p.storage.GetPersonById(p.GetId())
+	p.Person, err = p.storageInstance.GetPersonById(p.GetId())
 	return err
 }
 
 func (p *personRowGateway) Delete() error {
-	return p.storage.DeletePersonById(p.GetId())
+	return p.storageInstance.DeletePersonById(p.GetId())
 }

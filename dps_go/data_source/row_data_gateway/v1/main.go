@@ -1,13 +1,14 @@
 package main
 
 import (
-	"dps_go/data_source/row_data_gateway/v1/storage"
+	storage "dps_go/data_source/row_data_gateway/v1/storage"
+	rowGateway "dps_go/data_source/row_data_gateway/v1/storage/gateway/row/impl"
+	storageImpl "dps_go/data_source/row_data_gateway/v1/storage/impl"
 	"fmt"
 	"log"
 )
 
-func fillStorage() {
-	storageInstance := storage.Instance()
+func fillStorage(storageInstance storage.Storage) {
 	_, err := storageInstance.InsertCompany("msi")
 	if err != nil {
 		log.Fatal(err)
@@ -26,13 +27,15 @@ func fillStorage() {
 }
 
 func main() {
-	fillStorage()
-	storageInstance := storage.Instance()
+	storageType := storage.MEMORY
+	storageInstance := storageImpl.Instance(storage.MEMORY)
+
+	fillStorage(storageInstance)
 
 	// ***
 
 	{
-		person, err := storage.MakePerson("Joshua", "Bloch", 1)
+		person, err := rowGateway.MakePerson(storageType, "Joshua", "Bloch", 1)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -55,7 +58,7 @@ func main() {
 		}
 		fmt.Println("persons:", persons)
 
-		person, err := storage.FindPersonById(0)
+		person, err := rowGateway.FindPersonById(storageType, 0)
 		if err != nil {
 			log.Fatal(err)
 		}
