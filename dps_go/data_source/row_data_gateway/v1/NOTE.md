@@ -93,11 +93,11 @@ classDiagram
 
     %% ----------------------------------------------
 
+    %% redirect getters/setters calls to person!
     class PersonRowGateway {
         + Make(Type, string, string, int) PersonRowGateway, error$
         + Find(Type, id int) PersonRowGateway, error$
 
-        %% redirect calls to person!
         + GetId() int
 	    + GetFirstName() string
 	    + GetLastName() string
