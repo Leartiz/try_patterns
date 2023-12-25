@@ -104,18 +104,7 @@ func (p *personRowGateway) Insert() error {
 }
 
 func (p *personRowGateway) Update() error {
-	err := p.storageInstance.UpdatePerson(
-		p.GetId(), p.GetFirstName(), p.GetLastName(),
-		p.GetCompanyId(),
-	)
-	if err != nil {
-		return err
-	}
-
-	// ***
-
-	p.Person, err = p.storageInstance.GetPersonById(p.GetId()) // don't have to make a request!
-	return err
+	return p.UpdateWithCompanyId(p.GetCompanyId())
 }
 
 func (p *personRowGateway) UpdateWithCompanyId(companyId int) error {
@@ -139,10 +128,11 @@ func (p *personRowGateway) UpdateWithCompanyId(companyId int) error {
 
 	// ***
 
-	p.Person, err = p.storageInstance.GetPersonById(p.GetId())
+	p.Person, err = p.storageInstance.GetPersonById(p.GetId()) // don't have to make a request!
 	return err
 }
 
 func (p *personRowGateway) Delete() error {
+	// What to do after deletion?
 	return p.storageInstance.DeletePersonById(p.GetId())
 }

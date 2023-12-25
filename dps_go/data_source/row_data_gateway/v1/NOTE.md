@@ -16,17 +16,17 @@ classDiagram
         <<interface>>
         GetPersons() []Person, error
         GetPersonById(int) Person, error
-        InsertPerson(string, string, int) int, error
-	    UpdatePerson(int, string, string, int) error
-	    DeletePersonById(int) error
+        InsertPerson(string, string, int) int, error    
+        UpdatePerson(int, string, string, int) error
+        DeletePersonById(int) error
         ...()
     }
 
     class CompanyStorage {
         <<interface>>
         GetCompanies() []Company, error
-	    InsertCompany(string) int, error
-	    ExistsCompany(int) bool, error
+        InsertCompany(string) int, error
+        ExistsCompany(int) bool, error
         ...()
     }
 
@@ -34,13 +34,13 @@ classDiagram
         <<interface>>
         GetPersonById(int) Person, error
         InsertPerson(string, string, int) int, error
-	    UpdatePerson(int, string, string, int) error
-	    DeletePersonById(int) error
+        UpdatePerson(int, string, string, int) error
+        DeletePersonById(int) error
         ...()
 
         GetCompanies() []Company, error
-	    InsertCompany(string) int, error
-	    ExistsCompany(int) bool, error
+        InsertCompany(string) int, error
+        ExistsCompany(int) bool, error
         ...()
     }
 
@@ -65,12 +65,12 @@ classDiagram
 
     class Person {
         + GetId() int
-	    + GetFirstName() string
-	    + GetLastName() string
-	    + GetCompanyId() int
+        + GetFirstName() string
+        + GetLastName() string
+        + GetCompanyId() int
 
-	    + SetFirstName(string) bool
-	    + SetLastName(string) bool
+        + SetFirstName(string) bool
+        + SetLastName(string) bool
 
         - id        int
         - firstName string
@@ -79,13 +79,13 @@ classDiagram
     }
 
     class Company {
-	    + GetId() int
-	    + GetName() string
+        + GetId() int
+        + GetName() string
 
-	    + SetName(string) bool
+        + SetName(string) bool
 
         - id   int
-	    - name string
+        - name string
     }
 
     MemoryStorage o-- Person
@@ -99,16 +99,16 @@ classDiagram
         + Find(Type, id int) PersonRowGateway, error$
 
         + GetId() int
-	    + GetFirstName() string
-	    + GetLastName() string
-	    + GetCompanyId() int
+        + GetFirstName() string
+        + GetLastName() string
+        + GetCompanyId() int
 
-	    + SetFirstName(string) bool
-	    + SetLastName(string) bool
+        + SetFirstName(string) bool
+        + SetLastName(string) bool
 
         + Insert() error
-	    + Update() error
-	    + Delete() error
+        + Update() error
+        + Delete() error
 
         - person Person
         - storageInstance Storage
