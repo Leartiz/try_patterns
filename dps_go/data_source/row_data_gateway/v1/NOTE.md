@@ -1,6 +1,8 @@
 # v1
 
-## UML-diagram
+## Diagrams 📊
+
+### Class
 
 ```mermaid
 classDiagram
@@ -121,10 +123,10 @@ classDiagram
     PersonRowGateway o-- Storage
 ```
 
-## Implementation
+## Details
 
 - main [here](main.go)
-- Person [here](./domain/person.go)
 - Storage [here](./storage/storage.go)
 - MemoryStorage [here](./storage/impl/memory/storage.go)
+- Person [here](./domain/person.go)
 - PersonRowGateway [here](./storage/gateway/row/person.go)

@@ -452,3 +452,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Env
+
+chinook.sqlite
