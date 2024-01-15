@@ -11,7 +11,6 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-
 	fmt.Println(album)
 
 	// ***
@@ -22,6 +21,20 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	fmt.Println(album)
+
+	// ***
+
+	album.Title = "New Title 2"
+	album.ArtistId = 4
+	err = album.Create()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(album)
+
+	// ***
 
 	fmt.Println("[OK]")
 }
