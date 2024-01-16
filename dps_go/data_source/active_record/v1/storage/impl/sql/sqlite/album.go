@@ -20,11 +20,10 @@ func NewAlbum(title string, artistId int) *Album {
 
 func FindOne(id int) (*Album, error) {
 	db, err := openDatabase() // <--- unsafe!
-	defer db.Close()
-
 	if err != nil {
 		return nil, err
 	}
+	defer db.Close()
 
 	rows, err := db.Query(
 		fmt.Sprintf("SELECT * FROM Album WHERE AlbumId = %v;", id))
@@ -73,10 +72,10 @@ func (p *Album) Update() error {
 	}
 
 	db, err := openDatabase() // <--- unsafe!
-	defer db.Close()
 	if err != nil {
 		return err
 	}
+	defer db.Close()
 
 	_, err = db.Exec(`UPDATE Album SET Title = $1 WHERE AlbumId = $2;`,
 		p.Title, *p.AlbumId)

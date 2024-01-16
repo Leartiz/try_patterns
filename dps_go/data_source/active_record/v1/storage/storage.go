@@ -1,5 +1,5 @@
 package storage
 
-type Storage interface {
-	
-}
+// there must be something here?
+
+type Storage interface{}

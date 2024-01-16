@@ -10,8 +10,9 @@
 
 ### Data Source
 
-- Active Record [here](./theory/data_source/active_record/NOTE.md)
-- Row Data Gateway [here](./theory/data_source/row_data_gateway/NOTE.md)
+- Data Access Object [here](./theory/data_source/data_access_object/notes.md)
+- Active Record [here](./theory/data_source/active_record/notes.md)
+- Row Data Gateway [here](./theory/data_source/row_data_gateway/notes.md)
 
 ## Practice
 
