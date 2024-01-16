@@ -4,6 +4,7 @@ import (
 	"dps_go/data_source/row_data_gateway/v1/domain"
 )
 
+// or active record?
 type Person interface {
 	domain.Person
 

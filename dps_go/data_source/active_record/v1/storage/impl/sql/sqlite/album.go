@@ -14,6 +14,9 @@ type Album struct {
 	ArtistId int
 }
 
+// ctors
+// -----------------------------------------------------------------------
+
 func NewAlbum(title string, artistId int) *Album {
 	return &Album{Title: title, ArtistId: artistId}
 }
@@ -45,10 +48,6 @@ func FindOne(id int) (*Album, error) {
 	return nil, fmt.Errorf("Album with id %v not found", id)
 }
 
-func FindAll() ([]*Album, error) {
-	return nil, nil
-}
-
 func (p *Album) String() string {
 	strAlbumId := "<unknown>"
 	if p.AlbumId != nil {
@@ -63,12 +62,38 @@ func (p *Album) String() string {
 // -----------------------------------------------------------------------
 
 func (p *Album) Create() error {
+	if err := validateTitle(p.Title); err != nil {
+		return err
+	}
+
+	db, err := openDatabase()
+	defer db.Close()
+	if err != nil {
+		return err
+	}
+
+	result, err := db.Exec(`INSERT INTO Album (Title, ArtistId) VALUES  ($1, $2)`,
+		p.Title, p.ArtistId)
+	if err != nil {
+		return err
+	}
+
+	lastInsertedId, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	p.AlbumId = new(int)
+	*p.AlbumId = int(lastInsertedId)
 	return nil
 }
 
 func (p *Album) Update() error {
 	if p.AlbumId == nil {
 		return fmt.Errorf("Album id is nil")
+	}
+	if err := validateTitle(p.Title); err != nil { // <--- domain logic?
+		return err
 	}
 
 	db, err := openDatabase() // <--- unsafe!
@@ -91,11 +116,30 @@ func (p *Album) Delete() error {
 		return fmt.Errorf("Album id is nil")
 	}
 
+	db, err := openDatabase() // <--- unsafe!
+	defer db.Close()
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(`DELETE FROM Album WHERE AlbumId = $1;`,
+		*p.AlbumId)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 // private
 // -----------------------------------------------------------------------
+
+func validateTitle(title string) error {
+	if len(title) == 0 {
+		return fmt.Errorf("Title is empty")
+	}
+	return nil
+}
 
 func openDatabase() (*sql.DB, error) {
 	return sql.Open("sqlite3", "../../../../chinook.sqlite")
