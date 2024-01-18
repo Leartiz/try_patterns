@@ -16,15 +16,15 @@ func main() {
 		//...
 	}
 
-	pool := impl.NewPool(products)
+	var pool pool.Pool = impl.NewPool(products)
 	fmt.Println("Pool size:", pool.Size())
 
 	{
 		product, _ := pool.CaptureObject()
 		fmt.Println("Product:", product)
-		fmt.Println(pool.CapturedSize())
+		fmt.Println("Captured size:", pool.CapturedSize())
 
 		pool.ReleaseObject(product)
-		fmt.Println(pool.CapturedSize())
+		fmt.Println("Captured size:", pool.CapturedSize())
 	}
 }

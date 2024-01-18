@@ -1,7 +1,7 @@
 package pool
 
 type Pool interface {
-	CaptureObject() (any, error)
+	CaptureObject() (Object, error)
 	ReleaseObject(object Object)
 
 	CapturedSize() int

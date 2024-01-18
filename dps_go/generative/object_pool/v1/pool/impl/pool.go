@@ -2,7 +2,7 @@ package impl
 
 import (
 	"dps_go/generative/object_pool/v1/pool"
-	"reflect"
+	"fmt"
 )
 
 type objectWithStatus struct {
@@ -30,7 +30,7 @@ func NewPool(objects []pool.Object) *Pool {
 
 // -----------------------------------------------------------------------
 
-func (p *Pool) CaptureObject() (any, error) {
+func (p *Pool) CaptureObject() (pool.Object, error) {
 	for i := range p.objects {
 		if !p.objects[i].captured {
 			p.objects[i].captured = true
@@ -40,9 +40,9 @@ func (p *Pool) CaptureObject() (any, error) {
 	return nil, ErrAllObjectsAreCaptured
 }
 
-func (p *Pool) ReleaseObject(object any) {
+func (p *Pool) ReleaseObject(object pool.Object) {
 	for i := range p.objects {
-		if reflect.DeepEqual(p.objects[i], object) {
+		if p.objects[i].object.Eq(object) {
 			p.objects[i].captured = false
 			return
 		}
@@ -61,4 +61,14 @@ func (p *Pool) CapturedSize() int {
 
 func (p *Pool) Size() int {
 	return len(p.objects)
+}
+
+// -----------------------------------------------------------------------
+
+func (p *Pool) println() {
+	for i := range p.objects {
+		fmt.Println(p.objects[i].object,
+			p.objects[i].captured)
+	}
+	fmt.Println()
 }

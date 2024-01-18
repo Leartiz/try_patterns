@@ -1,5 +1,7 @@
 package domain
 
+import "dps_go/generative/object_pool/v1/pool"
+
 type Product struct {
 	Name string
 	Cost float64
@@ -12,6 +14,12 @@ func NewProduct(name string, cost float64) *Product {
 	}
 }
 
-func (p *Product) Eq(value *Product) bool {
-	return p.Name == value.Name && p.Cost == value.Cost
+func (p *Product) Eq(value pool.Object) bool {
+	other, converted := value.(*Product)
+	if !converted {
+		return false
+	}
+
+	return p.Name == other.Name &&
+		p.Cost == other.Cost
 }
