@@ -14,6 +14,8 @@
 - Active Record [here](./theory/data_source/active_record/notes.md)
 - Row Data Gateway [here](./theory/data_source/row_data_gateway/notes.md)
 
+### Optimization
+
 ## Practice
 
 - C++ [here](./dps/NOTE.md)

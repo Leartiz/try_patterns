@@ -1,7 +1,7 @@
 package impl
 
 import (
-	"dps_go/generative/object_pool/v1/pool"
+	"dps_go/optimization/object_pool/v1/pool"
 	"fmt"
 )
 

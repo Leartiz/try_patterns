@@ -1,12 +1,12 @@
 package impl
 
 import (
-	"dps_go/generative/object_pool/v1/domain"
-	"dps_go/generative/object_pool/v1/pool"
+	"dps_go/optimization/object_pool/v1/domain"
+	"dps_go/optimization/object_pool/v1/pool"
 	"testing"
 )
 
-// visual!
+// visual?
 func Test_Capture(t *testing.T) {
 	pool := NewPool([]pool.Object{
 		domain.NewProduct("Test", 123),

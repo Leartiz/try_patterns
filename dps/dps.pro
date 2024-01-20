@@ -3,5 +3,6 @@ TEMPLATE = subdirs
 SUBDIRS += \
    behavioral \
    exps \
-   generative
+   generative \
+   optimization
 
