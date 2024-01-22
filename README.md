@@ -16,6 +16,8 @@
 
 ### Optimization
 
+- Object Pool [here](./theory/optimization/object_pool/notes.md)
+
 ## Practice
 
 - C++ [here](./dps/NOTE.md)

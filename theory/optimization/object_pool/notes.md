@@ -32,3 +32,7 @@ sequenceDiagram
     Client->>Pool: ReleaseObject(object)
     Pool->>Pool: change busy flag
 ```
+
+## Implementation
+
+- Go [here](../../../dps_go/optimization/object_pool)
