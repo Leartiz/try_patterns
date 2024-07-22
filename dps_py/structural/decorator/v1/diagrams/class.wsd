@@ -1,0 +1,48 @@
+@startuml class_diagram
+
+hide empty methods
+hide empty members
+
+' nodes
+'------------------------------------------------
+
+abstract DataSource {
+    +string {abstract} read_data()
+    +void {abstract} write_data(string)
+}
+
+class FileDataSource {
+    +string read_data()
+    +void write_data(string)
+}
+
+abstract DataSourceDecorator {
+    +string {abstract} read_data()
+    +void {abstract} write_data(string)
+    -decoratee: DataSource
+}
+
+class VowelsRemoveDataSourceDecorator {
+    +string read_data()
+    +void write_data(string)
+}
+
+class ConvertToUpperDataSourceDecorator {
+    +string read_data()
+    +void write_data(string)
+}
+
+' edges
+'------------------------------------------------
+
+left to right direction
+
+DataSourceDecorator --|> DataSource
+DataSourceDecorator o-- DataSource
+
+FileDataSource -l-|> DataSource
+
+ConvertToUpperDataSourceDecorator -d-|> DataSourceDecorator 
+VowelsRemoveDataSourceDecorator -d-|> DataSourceDecorator
+
+@enduml
