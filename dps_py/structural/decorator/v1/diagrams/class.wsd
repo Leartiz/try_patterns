@@ -1,5 +1,12 @@
 @startuml class_diagram
 
+skinparam ClassBackgroundColor #F6F7C6
+skinparam ClassBorderColor #B22E50
+skinparam ClassBorderThickness 1.5
+skinparam ArrowThickness 1.5
+
+'------------------------------------------------
+
 hide empty methods
 hide empty members
 

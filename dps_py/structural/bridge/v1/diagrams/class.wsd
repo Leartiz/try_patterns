@@ -1,0 +1,88 @@
+@startuml class_diagram
+
+skinparam ClassBackgroundColor #F6F7C6
+skinparam ClassBorderColor #B22E50
+skinparam ClassBorderThickness 1.5
+skinparam ArrowThickness 1.5
+
+'------------------------------------------------
+
+hide empty methods
+hide empty members
+
+' nodes
+'------------------------------------------------
+
+interface Device {
+    + {abstract} is_enabled(): bool
+    + {abstract} enable()
+    + {abstract} disable()
+
+    + {abstract} get_volume(): float
+    + {abstract} set_volume(float)
+
+    + {abstract} get_channel(): int
+    + {abstract} set_channel(int)
+}
+
+class Tv {
+    + is_enabled(): bool
+    + enable()
+    + disable()
+
+    + get_volume(): float
+    + set_volume(float)
+
+    + get_channel(): int
+    + set_channel(int)
+
+    - enabled: bool
+    - channel: int
+    - volume: float
+}
+
+class Radio {
+    ...
+}
+
+'------------------------------------------------
+
+class Remote {
+    + toggle_power()
+    + volume_down()
+    + volume_up()
+    + channel_down()
+    + channel_up()
+
+    # device: Device
+}
+
+class AdvancedRemote {
+    + toggle_power()
+    + volume_down()
+    + volume_up()
+    + channel_down()
+    + channel_up()
+    + mute()
+}
+
+'------------------------------------------------
+
+class Client {
+    ...
+}
+
+' edges
+'------------------------------------------------
+
+left to right direction
+
+Tv ..|> Device
+Radio ..|> Device
+
+AdvancedRemote --|> Remote
+Remote o-- Device : bridge 
+
+Client --> Remote
+
+@enduml
