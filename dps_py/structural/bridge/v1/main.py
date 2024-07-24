@@ -4,25 +4,25 @@ import abc
 
 class Device(abc.ABC):
     @abc.abstractmethod
-    def is_enabled() -> bool: pass
+    def is_enabled(self) -> bool: pass
 
     @abc.abstractmethod
-    def enable(): pass
+    def enable(self): pass
 
     @abc.abstractmethod
-    def disable(): pass
+    def disable(self): pass
 
     @abc.abstractmethod
-    def get_volume() -> float: pass
+    def get_volume(self) -> float: pass
 
     @abc.abstractmethod
-    def set_volume(volume: float): pass
+    def set_volume(self, volume: float): pass
 
     @abc.abstractmethod
-    def get_channel() -> int: pass
+    def get_channel(self) -> int: pass
 
     @abc.abstractmethod
-    def set_channel(channel: int): pass
+    def set_channel(self, channel: int): pass
 
 
 class Tv(Device):
