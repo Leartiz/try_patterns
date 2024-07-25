@@ -1,0 +1,9 @@
+g++ -E main.cpp -o main.ii
+
+g++ -S main.ii -o main.s
+
+as main.s -o main.o
+
+g++ main.o -o main
+
+.\main.exe

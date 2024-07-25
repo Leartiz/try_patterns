@@ -2,7 +2,7 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
    behavioral \
-   exps \
+   _experiments \
    generative \
    optimization
 

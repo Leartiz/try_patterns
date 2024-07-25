@@ -86,21 +86,39 @@ func (gm *GameMap) Refresh() {
 func main() {
 
 	a := app.New()
-	window := a.NewWindow("Grid!")
+	window := a.NewWindow("Б***О")
 
 	// ***
+
+	text := [][]int{
+		{1, 1, 1, 0, 0},
+		{1, 0, 0, 0, 0},
+		{1, 1, 1, 0, 0},
+		{1, 0, 1, 0, 0},
+		{1, 1, 1, 0, 0},
+	}
 
 	window.Resize(fyne.Size{
 		Width:  512,
 		Height: 512,
 	})
 
-	gridSideSize := 10
+	gridSideSize := 5
 	grid := container.New(layout.NewGridLayout(gridSideSize))
 	fmt.Printf("Grid: %v", len(grid.Objects))
 
 	for i := 0; i < gridSideSize*gridSideSize; i++ {
-		rect := canvas.NewRectangle(color.Black)
+		row := i / gridSideSize
+		col := i % gridSideSize
+
+		var c color.Color
+		if text[row][col] > 0 {
+			c = color.Black
+		} else {
+			c = color.White
+		}
+
+		rect := canvas.NewRectangle(c)
 		grid.Add(rect)
 	}
 

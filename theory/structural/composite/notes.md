@@ -35,5 +35,7 @@ classDiagram
     Composite o-- Component
     Composite ..|> Component
     Leaf ..|> Component
+
     Component <-- Client 
+    Client ..> Composite : indirectly
 ```
