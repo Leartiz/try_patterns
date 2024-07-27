@@ -110,24 +110,36 @@ func (ll *List[T]) Println() {
 	fmt.Println()
 }
 
+func (ll *List[T]) Size() int {
+	sz := 0
+	step := ll.beg
+	for step != nil {
+		sz++
+		step = step.next
+	}
+	return sz
+}
+
 // -----------------------------------------------------------------------
 
 func main() {
 
 	/* visual tests */
 
-	fmt.Println("int")
+	fmt.Println("*** int ***")
 	{
 		l := List[int]{}
 		l.PushBack(100)
 		l.PushBack(101)
 		l.PushBack(102)
 		l.Println()
+		fmt.Printf("size: %v\n", l.Size())
 
 		// ***
 
 		l.PopBack()
 		l.Println()
+		fmt.Printf("size: %v\n", l.Size())
 
 		// ***
 
@@ -137,6 +149,7 @@ func main() {
 		l.PopFront()
 		l.PopFront()
 		l.Println()
+		fmt.Printf("size: %v\n", l.Size())
 
 		// ***
 
@@ -147,18 +160,21 @@ func main() {
 		l.PushBack(5)
 		l.PushBack(6)
 		l.Println()
+		fmt.Printf("size: %v\n", l.Size())
 	}
-	fmt.Println("string")
+	fmt.Println("*** string ***")
 	{
 		l := List[string]{}
 		l.PushBack("abc")
 		l.PushBack("ddd")
 		l.PushBack("fff")
 		l.Println()
+		fmt.Printf("size: %v\n", l.Size())
 
 		// ***
 
 		l.PopBack()
 		l.Println()
+		fmt.Printf("size: %v\n", l.Size())
 	}
 }
