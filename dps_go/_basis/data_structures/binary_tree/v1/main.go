@@ -131,38 +131,39 @@ func (t *Tree[T]) DelValue(value T, cond func(lhs, rhs T) bool) {
 		return // err?
 	}
 
-	t.delValue(&t.root, value, cond)
+	t.root = t.delValue(t.root, value, cond)
 }
 
-func (t *Tree[T]) delValue(node **Node[T], value T,
+func (t *Tree[T]) delValue(node *Node[T], value T,
 	cond func(lhs, rhs T) bool) *Node[T] {
 
-	if node == nil || *node == nil {
-		return nil
+	if node == nil {
+		return node
 	}
 
-	// ***
-
-	if value.Less((*node).value) {
-		(*node).l = t.delValue(&(*node).l, value, cond)
-
-	} else if value.More((*node).value) {
-		(*node).r = t.delValue(&(*node).r, value, cond)
-
-	} else if (*node).l != nil && (*node).r != nil { // delete!
-		(*node).value = t.Minimum((*node).r).value
-		(*node).r = t.delValue(&(*node).r, (*node).value, cond)
-
-	} else { // eq
-		if (*node).l != nil {
-			*node = (*node).l
-		} else if (*node).r != nil {
-			*node = (*node).r
+	if cond(node.value, value) {
+		if node.l == nil && node.r == nil { // leaf!
+			return nil
 		} else {
-			*node = nil
+			if node.l == nil {
+				return node.r
+			} else if node.r == nil {
+				return node.l
+			} else {
+
+				// TODO: !!!
+				node.value = t.Minimum(node.r).value
+				return node
+			}
+		}
+	} else {
+		if node.value.More(value) {
+			node.r = t.delValue(node.r, value, cond)
+		} else {
+			node.l = t.delValue(node.l, value, cond)
 		}
 	}
-	return (*node)
+	return node
 }
 
 // -----------------------------------------------------------------------
