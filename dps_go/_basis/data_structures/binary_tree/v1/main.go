@@ -4,9 +4,10 @@ import (
 	"fmt"
 )
 
-type MoreLessThat[T any] interface {
+type CompareThat[T any] interface {
 	Less(value T) bool
 	More(value T) bool
+	Equal(value T) bool
 }
 
 // -----------------------------------------------------------------------
@@ -27,6 +28,10 @@ func (i Int8) Less(value Int8) bool {
 	return i < value
 }
 
+func (i Int8) Equal(value Int8) bool {
+	return i == value
+}
+
 // -----------------------------------------------------------------------
 
 func (i Int16) More(value Int16) bool {
@@ -35,6 +40,10 @@ func (i Int16) More(value Int16) bool {
 
 func (i Int16) Less(value Int16) bool {
 	return i < value
+}
+
+func (i Int16) Equal(value Int16) bool {
+	return i == value
 }
 
 // -----------------------------------------------------------------------
@@ -47,6 +56,10 @@ func (i Int32) Less(value Int32) bool {
 	return i < value
 }
 
+func (i Int32) Equal(value Int32) bool {
+	return i == value
+}
+
 // -----------------------------------------------------------------------
 
 func (i Int64) More(value Int64) bool {
@@ -55,6 +68,10 @@ func (i Int64) More(value Int64) bool {
 
 func (i Int64) Less(value Int64) bool {
 	return i < value
+}
+
+func (i Int64) Equal(value Int64) bool {
+	return i == value
 }
 
 // -----------------------------------------------------------------------
@@ -67,14 +84,18 @@ func (i String) Less(value String) bool {
 	return i < value
 }
 
+func (i String) Equal(value String) bool {
+	return i == value
+}
+
 // -----------------------------------------------------------------------
 
-type Node[T MoreLessThat[T]] struct {
+type Node[T CompareThat[T]] struct {
 	value T
 	l, r  *Node[T]
 }
 
-func NewNode[T MoreLessThat[T]](value T) *Node[T] {
+func NewNode[T CompareThat[T]](value T) *Node[T] {
 	return &Node[T]{
 		value: value,
 		l:     nil,
@@ -84,11 +105,11 @@ func NewNode[T MoreLessThat[T]](value T) *Node[T] {
 
 // -----------------------------------------------------------------------
 
-type Tree[T MoreLessThat[T]] struct {
+type Tree[T CompareThat[T]] struct {
 	root *Node[T]
 }
 
-func NewTree[T MoreLessThat[T]]() *Tree[T] {
+func NewTree[T CompareThat[T]]() *Tree[T] {
 	return &Tree[T]{
 		root: nil,
 	}
@@ -96,6 +117,7 @@ func NewTree[T MoreLessThat[T]]() *Tree[T] {
 
 // -----------------------------------------------------------------------
 
+// O(log(n))
 func (t *Tree[T]) AddValue(value T) {
 	node := NewNode(value)
 	if t.root == nil {
@@ -107,14 +129,14 @@ func (t *Tree[T]) AddValue(value T) {
 }
 
 func (t *Tree[T]) addValue(node *Node[T], value T) {
-	if node.value.Less(value) {
+	if node.value.More(value) {
 		if node.l == nil {
 			node.l = NewNode(value)
 			return
 		} else {
 			t.addValue(node.l, value)
 		}
-	} else {
+	} else if node.value.Less(value) {
 		if node.r == nil {
 			node.r = NewNode(value)
 			return
@@ -122,10 +144,13 @@ func (t *Tree[T]) addValue(node *Node[T], value T) {
 			t.addValue(node.r, value)
 		}
 	}
+
+	// else: ignore.
 }
 
 // -----------------------------------------------------------------------
 
+// O(log(n))
 func (t *Tree[T]) DelValue(value T, cond func(lhs, rhs T) bool) {
 	if t.root == nil {
 		return // err?
@@ -149,18 +174,20 @@ func (t *Tree[T]) delValue(node *Node[T], value T,
 				return node.r
 			} else if node.r == nil {
 				return node.l
-			} else {
+			} else { // parent!
+				minNode := t.Minimum(node.r)
+				node.value = minNode.value
 
-				// TODO: !!!
-				node.value = t.Minimum(node.r).value
+				node.r = t.delValue(node.r, minNode.value, cond) // ?
 				return node
 			}
 		}
+
 	} else {
 		if node.value.More(value) {
-			node.r = t.delValue(node.r, value, cond)
-		} else {
 			node.l = t.delValue(node.l, value, cond)
+		} else {
+			node.r = t.delValue(node.r, value, cond)
 		}
 	}
 	return node
@@ -188,8 +215,28 @@ func (t *Tree[T]) Search(desiredValue T, cond func(lhs, rhs T) bool) bool {
 	return result
 }
 
+// O(log(n))
+func (t *Tree[T]) FastSearch(desiredValue T) bool {
+	return t.fastSearch(t.root, desiredValue)
+}
+
+func (t *Tree[T]) fastSearch(node *Node[T], desiredValue T) bool {
+	if node == nil {
+		return false
+	}
+
+	if node.value.More(desiredValue) {
+		return t.fastSearch(node.l, desiredValue)
+	} else if node.value.Less(desiredValue) {
+		return t.fastSearch(node.r, desiredValue)
+	} else {
+		return true
+	}
+}
+
 // -----------------------------------------------------------------------
 
+// O(log(n))
 func (t *Tree[T]) Minimum(x *Node[T]) *Node[T] {
 	if x.l == nil {
 		return x
@@ -197,6 +244,7 @@ func (t *Tree[T]) Minimum(x *Node[T]) *Node[T] {
 	return t.Minimum(x.l)
 }
 
+// O(log(n))
 func (t *Tree[T]) Maximum(x *Node[T]) *Node[T] {
 	if x.l == nil {
 		return x
@@ -207,11 +255,31 @@ func (t *Tree[T]) Maximum(x *Node[T]) *Node[T] {
 // -----------------------------------------------------------------------
 
 // O(n)
+func (t *Tree[T]) Size() int {
+	nodeCount := 0
+	t.Traversal(InOrder, func(value T) {
+		nodeCount++
+	})
+	return nodeCount
+}
+
+// O(n)
+func (t *Tree[T]) ToSlice(order Order) []T {
+	values := []T{}
+	t.Traversal(order, func(value T) {
+		values = append(values, value)
+	})
+	return values
+}
+
+// O(n)
 func (t *Tree[T]) Println(order Order) {
 	printValue := func(value T) { fmt.Printf("%v ", value) }
 	t.Traversal(order, printValue)
 	fmt.Println()
 }
+
+// -----------------------------------------------------------------------
 
 func (t *Tree[T]) preOrderTraversal(node *Node[T], action func(value T)) {
 	if node == nil {
@@ -228,9 +296,9 @@ func (t *Tree[T]) inOrderTraversal(node *Node[T], action func(desiredValue T)) {
 		return
 	}
 
-	t.preOrderTraversal(node.l, action)
+	t.inOrderTraversal(node.l, action)
 	action(node.value)
-	t.preOrderTraversal(node.r, action)
+	t.inOrderTraversal(node.r, action)
 }
 
 func (t *Tree[T]) postOrderTraversal(node *Node[T], action func(value T)) {
@@ -238,8 +306,8 @@ func (t *Tree[T]) postOrderTraversal(node *Node[T], action func(value T)) {
 		return
 	}
 
-	t.preOrderTraversal(node.l, action)
-	t.preOrderTraversal(node.r, action)
+	t.postOrderTraversal(node.l, action)
+	t.postOrderTraversal(node.r, action)
 	action(node.value)
 }
 
@@ -258,38 +326,65 @@ func (t *Tree[T]) Traversal(order Order, action func(value T)) {
 // -----------------------------------------------------------------------
 
 func main() {
-	{
-		var a int = 101
-		fmt.Printf("a: %v\n", a)
-	}
+
 	fmt.Println("*** Int32 ***")
 	{
 		t := NewTree[Int32]()
-		t.AddValue(100)
-		t.AddValue(101)
 		t.AddValue(102)
+		t.AddValue(100)
 		t.AddValue(103)
+		t.AddValue(101)
 		t.AddValue(104)
+		t.AddValue(103) // !
 
 		t.Println(InOrder)
-		t.DelValue(102, func(lhs, rhs Int32) bool { return lhs == rhs })
+		t.Println(PreOrder)
+		t.Println(PostOrder)
+		fmt.Println(t.ToSlice(InOrder))
+		fmt.Println(t.ToSlice(PreOrder))
+		fmt.Println(t.ToSlice(PostOrder))
+
+		// ***
+
+		t.DelValue(102, func(lhs, rhs Int32) bool {
+			return lhs == rhs
+		})
 
 		// ***
 
 		t.Println(InOrder)
 		t.Println(PreOrder)
 		t.Println(PostOrder)
+		fmt.Println(t.ToSlice(InOrder))
+		fmt.Println(t.ToSlice(PreOrder))
+		fmt.Println(t.ToSlice(PostOrder))
 
 		// ***
 
-		has := t.Search(102, func(lhs, rhs Int32) bool { return lhs == rhs })
+		has := t.Search(100, func(lhs, rhs Int32) bool {
+			return lhs.Equal(rhs)
+		})
+		fmt.Printf("t has 100: %v\n", has)
+
+		has = t.Search(102, func(lhs, rhs Int32) bool {
+			return lhs.Equal(rhs)
+		})
 		fmt.Printf("t has 102: %v\n", has)
 
-		has = t.Search(109, func(lhs, rhs Int32) bool { return lhs == rhs })
+		has = t.Search(109, func(lhs, rhs Int32) bool {
+			return lhs == rhs
+		})
 		fmt.Printf("t has 109: %v\n", has)
-	}
-	// ***
-	{
 
+		// ***
+
+		has = t.FastSearch(100) // +
+		fmt.Printf("t has 100: %v\n", has)
+
+		has = t.FastSearch(102)
+		fmt.Printf("t has 102: %v\n", has)
+
+		has = t.FastSearch(109)
+		fmt.Printf("t has 109: %v\n", has)
 	}
 }
