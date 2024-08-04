@@ -120,6 +120,16 @@ func (ll *List[T]) Size() int {
 	return sz
 }
 
+func (ll *List[T]) ToSlice() []T {
+	values := []T{}
+	step := ll.beg
+	for step != nil {
+		values = append(values, step.value)
+		step = step.next
+	}
+	return values
+}
+
 // -----------------------------------------------------------------------
 
 func main() {
@@ -134,12 +144,14 @@ func main() {
 		l.PushBack(102)
 		l.Println()
 		fmt.Printf("size: %v\n", l.Size())
+		fmt.Printf("values: %v\n", l.ToSlice())
 
 		// ***
 
 		l.PopBack()
 		l.Println()
 		fmt.Printf("size: %v\n", l.Size())
+		fmt.Printf("values: %v\n", l.ToSlice())
 
 		// ***
 
@@ -150,6 +162,7 @@ func main() {
 		l.PopFront()
 		l.Println()
 		fmt.Printf("size: %v\n", l.Size())
+		fmt.Printf("values: %v\n", l.ToSlice())
 
 		// ***
 
@@ -161,6 +174,7 @@ func main() {
 		l.PushBack(6)
 		l.Println()
 		fmt.Printf("size: %v\n", l.Size())
+		fmt.Printf("values: %v\n", l.ToSlice())
 	}
 	fmt.Println("*** string ***")
 	{
@@ -170,11 +184,13 @@ func main() {
 		l.PushBack("fff")
 		l.Println()
 		fmt.Printf("size: %v\n", l.Size())
+		fmt.Printf("values: %v\n", l.ToSlice())
 
 		// ***
 
 		l.PopBack()
 		l.Println()
 		fmt.Printf("size: %v\n", l.Size())
+		fmt.Printf("values: %v\n", l.ToSlice())
 	}
 }

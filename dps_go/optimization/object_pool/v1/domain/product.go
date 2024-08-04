@@ -1,6 +1,8 @@
 package domain
 
-import "dps_go/optimization/object_pool/v1/pool"
+import (
+	"dps_go/optimization/object_pool/v1/pool"
+)
 
 type Product struct {
 	Name string
