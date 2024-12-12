@@ -1,8 +1,9 @@
 package main
 
 type Node[T any] struct {
-	value      T
-	prev, next *Node[T]
+	value T
+	prev  *Node[T]
+	next  *Node[T]
 }
 
 func NewNode[T any](value T) *Node[T] {
@@ -14,7 +15,8 @@ func NewNode[T any](value T) *Node[T] {
 }
 
 type List[T any] struct {
-	beg, end *Node[T]
+	beg *Node[T]
+	end *Node[T]
 }
 
 // -----------------------------------------------------------------------
