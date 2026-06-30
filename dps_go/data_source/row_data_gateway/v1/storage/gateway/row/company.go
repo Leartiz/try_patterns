@@ -1,6 +1,6 @@
 package row
 
-import "dps_go/data_source/row_data_gateway/v1/domain"
+import "rdg_v1/domain"
 
 type Company interface {
 	domain.Company

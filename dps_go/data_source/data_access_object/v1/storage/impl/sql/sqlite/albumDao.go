@@ -1,8 +1,8 @@
 package sqlite
 
 import (
-	"dps_go/data_source/data_access_object/v1/domain/table"
-	"dps_go/data_source/data_access_object/v1/storage/dto"
+	"dao_v1/domain/table"
+	"dao_v1/storage/dto"
 
 	_ "github.com/mattn/go-sqlite3"
 )

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"dps_go/optimization/object_pool/v1/domain"
-	"dps_go/optimization/object_pool/v1/pool"
-	"dps_go/optimization/object_pool/v1/pool/impl"
+	"op_v1/domain"
+	"op_v1/pool"
+	"op_v1/pool/impl"
 	"fmt"
 )
 

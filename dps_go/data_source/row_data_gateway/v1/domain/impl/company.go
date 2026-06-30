@@ -1,7 +1,7 @@
 package impl
 
 import (
-	"dps_go/data_source/row_data_gateway/v1/domain"
+	"rdg_v1/domain"
 	"fmt"
 )
 

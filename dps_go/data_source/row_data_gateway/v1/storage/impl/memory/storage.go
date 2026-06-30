@@ -1,9 +1,9 @@
 package memory
 
 import (
-	domain "dps_go/data_source/row_data_gateway/v1/domain"
-	domainImpl "dps_go/data_source/row_data_gateway/v1/domain/impl"
-	"dps_go/data_source/row_data_gateway/v1/storage"
+	domain "rdg_v1/domain"
+	domainImpl "rdg_v1/domain/impl"
+	"rdg_v1/storage"
 	"fmt"
 	"sync"
 )

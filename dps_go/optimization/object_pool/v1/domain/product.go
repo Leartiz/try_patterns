@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"dps_go/optimization/object_pool/v1/pool"
+	"op_v1/pool"
 )
 
 type Product struct {

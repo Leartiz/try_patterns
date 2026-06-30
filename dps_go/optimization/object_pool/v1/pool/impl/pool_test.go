@@ -1,8 +1,8 @@
 package impl
 
 import (
-	"dps_go/optimization/object_pool/v1/domain"
-	"dps_go/optimization/object_pool/v1/pool"
+	"op_v1/domain"
+	"op_v1/pool"
 	"testing"
 )
 

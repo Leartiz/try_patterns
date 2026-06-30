@@ -1,7 +1,7 @@
 package main
 
 import (
-	"dps_go/data_source/data_access_object/v1/storage/impl/sql/sqlite"
+	"dao_v1/storage/impl/sql/sqlite"
 	"fmt"
 )
 

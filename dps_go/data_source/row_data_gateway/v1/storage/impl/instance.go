@@ -1,8 +1,8 @@
 package impl
 
 import (
-	"dps_go/data_source/row_data_gateway/v1/storage"
-	"dps_go/data_source/row_data_gateway/v1/storage/impl/memory"
+	"rdg_v1/storage"
+	"rdg_v1/storage/impl/memory"
 )
 
 // singleton?

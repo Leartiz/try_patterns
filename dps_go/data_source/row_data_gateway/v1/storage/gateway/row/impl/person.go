@@ -1,11 +1,11 @@
 package impl
 
 import (
-	domain "dps_go/data_source/row_data_gateway/v1/domain"
-	domainImpl "dps_go/data_source/row_data_gateway/v1/domain/impl"
-	storage "dps_go/data_source/row_data_gateway/v1/storage"
-	rowGateway "dps_go/data_source/row_data_gateway/v1/storage/gateway/row"
-	storageImpl "dps_go/data_source/row_data_gateway/v1/storage/impl"
+	domain "rdg_v1/domain"
+	domainImpl "rdg_v1/domain/impl"
+	storage "rdg_v1/storage"
+	rowGateway "rdg_v1/storage/gateway/row"
+	storageImpl "rdg_v1/storage/impl"
 	"fmt"
 )
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"dps_go/behavioral/template_method/v2/domain"
+	"tm_v2/domain"
 	"fmt"
 	"reflect"
 )

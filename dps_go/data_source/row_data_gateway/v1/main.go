@@ -1,9 +1,9 @@
 package main
 
 import (
-	storage "dps_go/data_source/row_data_gateway/v1/storage"
-	rowGateway "dps_go/data_source/row_data_gateway/v1/storage/gateway/row/impl"
-	storageImpl "dps_go/data_source/row_data_gateway/v1/storage/impl"
+	storage "rdg_v1/storage"
+	rowGateway "rdg_v1/storage/gateway/row/impl"
+	storageImpl "rdg_v1/storage/impl"
 	"fmt"
 	"log"
 )

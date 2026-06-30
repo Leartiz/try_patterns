@@ -1,7 +1,7 @@
 package main
 
 import (
-	"dps_go/data_source/active_record/v1/storage/impl/sql/sqlite"
+	"ar_v1/storage/impl/sql/sqlite"
 	"fmt"
 )
 

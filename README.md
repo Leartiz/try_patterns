@@ -1,17 +1,23 @@
 # Basis
 
+Repository conventions - [CONVENTION.md](./CONVENTION.md).
+
 ## Theory
 
 ### Data Structures
 
+- AVL Tree [here](./theory/_basis/data_structures/avl_tree/notes.md)
 - Binary Tree [here](./theory/_basis/data_structures/binary_tree/notes.md)
 - Singly Linked List [here](./theory/_basis/data_structures/singly_linked_list/notes.md)
 - Doubly Linked List [here](./theory/_basis/data_structures/doubly_linked_list/notes.md)
+- Priority Queue [here](./theory/_basis/data_structures/priority_queue/notes.md)
 - Skip List [here](./theory/_basis/data_structures/skip_list/notes.md)
 
 ### Algorithms
 
-# Design patterns (dps) 🏗
+- Greedy [here](./theory/_basis/algorithms/greedy/notes.md)
+
+# Design patterns (dps)
 
 ## Theory
 
@@ -25,6 +31,7 @@
 - Bridge [here](./theory/structural/bridge/notes.md)
 - Composite [here](./theory/structural/composite/notes.md)
 - Decorator [here](./theory/structural/decorator/notes.md)
+- Flyweight [here](./theory/structural/flyweight/notes.md)
 
 ### Data Source
 

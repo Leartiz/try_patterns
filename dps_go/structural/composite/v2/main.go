@@ -127,5 +127,3 @@ func main() {
 	window.SetContent(grid)
 	window.ShowAndRun()
 }
-
-// -----------------------------------------------------------------------
