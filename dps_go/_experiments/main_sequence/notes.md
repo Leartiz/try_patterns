@@ -3,6 +3,8 @@
 From package metrics (Martin / architecture books).
 Plot **abstractness A** on Y-axis, **instability I** on X-axis.
 
+> Из книги.
+
 ## Formulas
 
 Abstractness:

@@ -44,3 +44,4 @@ Go code index. Repository conventions - [CONVENTION.md](../CONVENTION.md).
 - `_experiments` - quick drafts (folder name = topic slug)
   - reflect type demo [here](./_experiments/reflect_type_demo/main.go)
   - main sequence (A vs I) [here](./_experiments/main_sequence/main.go) | [notes](./_experiments/main_sequence/notes.md)
+  - cyclomatic complexity [here](./_experiments/cyclomatic_complexity/main.go) | [notes](./_experiments/cyclomatic_complexity/notes.md)
