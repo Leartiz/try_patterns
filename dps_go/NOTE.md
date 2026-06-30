@@ -41,5 +41,6 @@ Go code index. Repository conventions - [CONVENTION.md](../CONVENTION.md).
 ## Other
 
 - `_systems` - composed subsystems (auth, http api, migrations, ...)
-- `_experiments` - quick drafts
-  - n1 [here](./_experiments/n1/main.go)
+- `_experiments` - quick drafts (folder name = topic slug)
+  - reflect type demo [here](./_experiments/reflect_type_demo/main.go)
+  - main sequence (A vs I) [here](./_experiments/main_sequence/main.go) | [notes](./_experiments/main_sequence/notes.md)
