@@ -15,7 +15,9 @@ Go code index. Repository conventions - [CONVENTION.md](../CONVENTION.md).
 
 ### Algorithms
 
+- Euclidean [here](./_basis/algorithms/euclidean/v1/main.go)
 - Greedy [here](./_basis/algorithms/greedy/v1/main.go)
+- Sliding Window [here](./_basis/algorithms/sliding_window/v1/main.go)
 
 ## Design patterns
 

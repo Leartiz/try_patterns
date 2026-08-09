@@ -15,7 +15,9 @@ Repository conventions - [CONVENTION.md](./CONVENTION.md).
 
 ### Algorithms
 
+- Euclidean [here](./theory/_basis/algorithms/euclidean/notes.md)
 - Greedy [here](./theory/_basis/algorithms/greedy/notes.md)
+- Sliding Window [here](./theory/_basis/algorithms/sliding_window/notes.md)
 
 # Design patterns (dps)
 
