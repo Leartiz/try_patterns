@@ -1,0 +1,7 @@
+# build intermediates from the pipeline demo
+*.ii
+*.s
+*.o
+*.obj
+*.exe
+a.out
