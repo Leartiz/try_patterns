@@ -21,6 +21,12 @@ Go code index. Repository conventions - [CONVENTION.md](../CONVENTION.md).
 
 ## Design patterns
 
+### Generative
+
+- Factory Method [v1](./generative/factory_method/v1/main.go)
+- Simple Factory [v1](./generative/simple_factory/v1/main.go)
+- Prototype [v1](./generative/prototype/v1/main.go) | [v2](./generative/prototype/v2/main.go)
+
 ### Behavioral
 
 - Template Method [v1](./behavioral/template_method/v1/main.go) | [v2](./behavioral/template_method/v2/main.go)

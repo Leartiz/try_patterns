@@ -12,6 +12,7 @@ Repository conventions - [CONVENTION.md](./CONVENTION.md).
 - Doubly Linked List [here](./theory/_basis/data_structures/doubly_linked_list/notes.md)
 - Priority Queue [here](./theory/_basis/data_structures/priority_queue/notes.md)
 - Skip List [here](./theory/_basis/data_structures/skip_list/notes.md)
+- Trie [here](./theory/_basis/data_structures/trie/notes.md)
 
 ### Algorithms
 
@@ -26,6 +27,10 @@ Repository conventions - [CONVENTION.md](./CONVENTION.md).
 ### Behavior
 
 ### Generative
+
+- Factory Method [here](./theory/generative/factory_method/notes.md)
+- Simple Factory [here](./theory/generative/simple_factory/notes.md)
+- Prototype [here](./theory/generative/prototype/notes.md)
 
 ### Structural
 
